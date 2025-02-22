@@ -24,12 +24,6 @@ try {
     die("Ошибка подключения к БД: " . $e->getMessage());
 }
 
-// Создание таблицы пользователей, если её нет
-$pdo->exec("CREATE TABLE IF NOT EXISTS users (
-    id BIGINT PRIMARY KEY,
-    balance DECIMAL(10,2) NOT NULL DEFAULT 0.00
-)");
-
 echo "Бот запущен. Ожидание сообщений...\n";
 
 $offset = 0;
