@@ -3,7 +3,6 @@
 class Database {
     private $pdo;
 
-    // Подключение к базе данных
     public function __construct($host, $db, $user, $pass) {
         try {
             $this->pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass, [
@@ -13,6 +12,23 @@ class Database {
         } catch (PDOException $e) {
             die("Ошибка подключения к базе данных: " . $e->getMessage());
         }
+
+        // Проверяем наличие таблицы users, если её нет, создаём
+        $this->createUsersTable();
+    }
+
+    private function createUsersTable() {
+        $query = "
+        CREATE TABLE IF NOT EXISTS users (
+            id BIGINT PRIMARY KEY,
+            balance DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB;
+        ";
+
+        // Выполняем запрос на создание таблицы
+        $this->pdo->exec($query);
     }
 
     // Метод для получения баланса пользователя
